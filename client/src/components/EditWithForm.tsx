@@ -1,20 +1,20 @@
+import { Dispatch } from "react";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import { StyledForm } from "../styles";
-import { IFormResponseData, ActionType } from "../types";
+import { ActionType, ReducerActionType } from "../types";
 import { defaultFormData, colorOptions } from "../constants";
 
 const EditWithForm = ({
-  formData,
-  internalOnchange,
+  setFormData,
 }: {
-  formData: Partial<IFormResponseData> | null;
-  internalOnchange: (
+  setFormData: Dispatch<ReducerActionType>;
+}) => {
+  const internalOnchange = (
     type: number,
     payload: { name: string; value: string }
-  ) => void;
-}) => {
-  console.log("form", formData);
+  ) => setFormData({ type, payload });
+
   return (
     <StyledForm>
       <TextField
@@ -72,8 +72,8 @@ const EditWithForm = ({
           });
         }}
       >
-        {colorOptions.map((option) => (
-          <MenuItem key={option.value} value={option.value}>
+        {colorOptions.map((option, i) => (
+          <MenuItem key={i} value={option.value}>
             {option.label}
           </MenuItem>
         ))}

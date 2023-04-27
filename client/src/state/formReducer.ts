@@ -1,24 +1,21 @@
 import { ActionType, IFormResponseData, ReducerActionType } from "../types";
-import { defaultFormData } from "../constants";
 
 export function formReducer(
   state: Partial<IFormResponseData> | null,
   action: ReducerActionType,
 ): Partial<IFormResponseData> | null {
-  const defaultState = { ...defaultFormData };
-  const trimmedState = { ...defaultState, ...(state || null) };
+  const stateCopy = { ...(state || null) };
 
   switch (action.type) {
     case ActionType.inputChange:
-      console.log('ts', trimmedState, action.payload)
       return {
-        ...trimmedState,
+        ...stateCopy,
         [action.payload.name]: action.payload.value
       }
 
     case ActionType.updateData:
       return {
-        ...trimmedState,
+        ...stateCopy,
         ...action.payload,
       }
 

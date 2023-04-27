@@ -7,8 +7,6 @@ export const defaultFormData: IFormResponseData = {
   favorite_primary_color: 'red',
 };
 
-export const defaultFormDataEntries = Object.entries(defaultFormData);
-
 export const colorOptions = [
   { value: "red", label: "red" },
   { value: "yellow", label: "yellow" },

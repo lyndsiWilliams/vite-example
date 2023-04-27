@@ -7,9 +7,6 @@ export interface IFormResponseData {
 
 interface IReducerPayload {
   name: string;
-  // json?: string;
-  // target?: string;
-  // type?: string
   value?: string;
 }
 

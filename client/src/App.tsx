@@ -1,14 +1,13 @@
 import { useReducer, Reducer, useState, useEffect } from "react";
-import EditWithForm from "./components/EditWithForm";
 import Button from "@mui/material/Button";
-import DataDisplay from "./components/DataDisplay";
+import EditWithForm from "./components/EditWithForm";
 import EditWithJSON from "./components/EditWithJSON";
+import DataDisplay from "./components/DataDisplay";
 import { formReducer } from "./state/formReducer";
-import { ReducerActionType, IFormResponseData, ActionType } from "./types";
+import { ReducerActionType, IFormResponseData } from "./types";
 import { StyledRow, StyledColumn } from "./styles";
-import "./App.css";
 import { defaultFormData } from "./constants";
-import _ from "lodash";
+import "./App.css";
 
 function App() {
   const [formData, setFormData] = useReducer<
@@ -19,34 +18,12 @@ function App() {
     JSON.stringify(defaultFormData, null, "\t")
   );
 
-  const internalOnchange = (
-    type: number,
-    payload: { name: string; value: string }
-  ) => setFormData({ type, payload });
-
-  const handleSubmit = () => {
-    if (
-      formData &&
-      formData !== defaultFormData &&
-      _.isEqual(JSON.parse(JSONdata), formData)
-    ) {
-      console.log("no match", formData, JSONdata);
-      setFormData({
-        type: ActionType.updateData,
-        payload: formData,
-      });
+  useEffect(() => {
+    if (JSON.stringify(formData) !== JSONdata) {
       setJSONdata(JSON.stringify(formData, null, 2));
-    } else if (_.isEqual(JSON.parse(JSONdata), defaultFormData) === false) {
-      console.log("false JSON--");
-      setFormData({
-        type: ActionType.updateData,
-        payload: JSON.parse(JSONdata),
-      });
-    } else {
-      console.log("yes match", formData, JSONdata);
-      console.log("outta here");
     }
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formData]);
 
   return (
     <StyledRow>
@@ -55,16 +32,15 @@ function App() {
           {editJSON ? "Edit with form" : "Edit JSON directly"}
         </Button>
         {editJSON ? (
-          <EditWithJSON JSONdata={JSONdata} setJSONdata={setJSONdata} />
-        ) : (
-          <EditWithForm
+          <EditWithJSON
+            JSONdata={JSONdata}
+            setJSONdata={setJSONdata}
             formData={formData}
-            internalOnchange={internalOnchange}
+            setFormData={setFormData}
           />
+        ) : (
+          <EditWithForm setFormData={setFormData} />
         )}
-        <Button variant="contained" onClick={() => handleSubmit()}>
-          Submit changes
-        </Button>
       </StyledColumn>
       <DataDisplay formData={formData} />
     </StyledRow>

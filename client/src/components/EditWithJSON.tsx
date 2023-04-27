@@ -1,29 +1,46 @@
 import { Dispatch, SetStateAction } from "react";
+import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { StyledForm } from "../styles";
-import { defaultFormData } from "../constants";
+import { ActionType, ReducerActionType, IFormResponseData } from "../types";
 import _ from "lodash";
 
 const EditWithJSON = ({
   JSONdata,
   setJSONdata,
+  formData,
+  setFormData,
 }: {
   JSONdata: string;
   setJSONdata: Dispatch<SetStateAction<string>>;
+  formData: Partial<IFormResponseData> | null;
+  setFormData: Dispatch<ReducerActionType>;
 }) => {
-  console.log("JSONdata", _.isEqual(JSON.parse(JSONdata), defaultFormData));
+  const handleSubmit = () => {
+    if (_.isEqual(JSON.parse(JSONdata), formData) === false) {
+      setFormData({
+        type: ActionType.updateData,
+        payload: JSON.parse(JSONdata),
+      });
+    }
+  };
 
   return (
-    <StyledForm>
-      <TextField
-        id="outlined-multiline-flexible"
-        label="Edit JSON"
-        multiline
-        defaultValue={JSONdata}
-        sx={{ margin: "20px", width: "320px" }}
-        onChange={(event) => setJSONdata(event.target.value)}
-      />
-    </StyledForm>
+    <>
+      <StyledForm>
+        <TextField
+          id="outlined-multiline-flexible"
+          label="Edit JSON"
+          multiline
+          defaultValue={JSONdata}
+          sx={{ margin: "20px", width: "320px" }}
+          onChange={(event) => setJSONdata(event.target.value)}
+        />
+      </StyledForm>
+      <Button variant="contained" onClick={() => handleSubmit()}>
+        Submit changes
+      </Button>
+    </>
   );
 };
 
