@@ -1,35 +1,74 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useReducer, Reducer, useState, useEffect } from "react";
+import EditWithForm from "./components/EditWithForm";
+import Button from "@mui/material/Button";
+import DataDisplay from "./components/DataDisplay";
+import EditWithJSON from "./components/EditWithJSON";
+import { formReducer } from "./state/formReducer";
+import { ReducerActionType, IFormResponseData, ActionType } from "./types";
+import { StyledRow, StyledColumn } from "./styles";
+import "./App.css";
+import { defaultFormData } from "./constants";
+import _ from "lodash";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [formData, setFormData] = useReducer<
+    Reducer<Partial<IFormResponseData> | null, ReducerActionType>
+  >(formReducer, defaultFormData);
+  const [editJSON, setEditJSON] = useState<boolean>(false);
+  const [JSONdata, setJSONdata] = useState<string>(
+    JSON.stringify(defaultFormData, null, "\t")
+  );
+
+  const internalOnchange = (
+    type: number,
+    payload: { name: string; value: string }
+  ) => setFormData({ type, payload });
+
+  const handleSubmit = () => {
+    if (
+      formData &&
+      formData !== defaultFormData &&
+      _.isEqual(JSON.parse(JSONdata), formData)
+    ) {
+      console.log("no match", formData, JSONdata);
+      setFormData({
+        type: ActionType.updateData,
+        payload: formData,
+      });
+      setJSONdata(JSON.stringify(formData, null, 2));
+    } else if (_.isEqual(JSON.parse(JSONdata), defaultFormData) === false) {
+      console.log("false JSON--");
+      setFormData({
+        type: ActionType.updateData,
+        payload: JSON.parse(JSONdata),
+      });
+    } else {
+      console.log("yes match", formData, JSONdata);
+      console.log("outta here");
+    }
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <StyledRow>
+      <StyledColumn>
+        <Button variant="contained" onClick={() => setEditJSON(!editJSON)}>
+          {editJSON ? "Edit with form" : "Edit JSON directly"}
+        </Button>
+        {editJSON ? (
+          <EditWithJSON JSONdata={JSONdata} setJSONdata={setJSONdata} />
+        ) : (
+          <EditWithForm
+            formData={formData}
+            internalOnchange={internalOnchange}
+          />
+        )}
+        <Button variant="contained" onClick={() => handleSubmit()}>
+          Submit changes
+        </Button>
+      </StyledColumn>
+      <DataDisplay formData={formData} />
+    </StyledRow>
+  );
 }
 
-export default App
+export default App;
