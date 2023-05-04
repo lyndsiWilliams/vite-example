@@ -3,6 +3,7 @@ import styled from "@emotion/styled";
 export const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
+  min-width: 220px;
 `;
 
 export const StyledLeftSpaceForm = styled(StyledForm)`

@@ -33,7 +33,7 @@ const EditWithJSON = ({
           label="Edit JSON"
           multiline
           defaultValue={JSONdata}
-          sx={{ margin: "20px", width: "320px" }}
+          sx={{ margin: "56px -40px", width: "300px" }}
           onChange={(event) => setJSONdata(event.target.value)}
         />
       </StyledForm>

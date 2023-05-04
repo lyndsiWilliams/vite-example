@@ -3,7 +3,7 @@ import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import { StyledForm } from "../styles";
 import { ActionType, ReducerActionType } from "../types";
-import { defaultFormData, colorOptions } from "../constants";
+import { colorOptions } from "../constants";
 
 const EditWithForm = ({
   setFormData,
@@ -63,7 +63,6 @@ const EditWithForm = ({
         label="Favorite primary color"
         variant="outlined"
         margin="normal"
-        defaultValue={defaultFormData.favorite_primary_color}
         select
         onChange={(event) => {
           internalOnchange(ActionType.inputChange, {
