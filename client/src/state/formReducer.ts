@@ -4,7 +4,7 @@ export function formReducer(
   state: Partial<IFormResponseData> | null,
   action: ReducerActionType,
 ): Partial<IFormResponseData> | null {
-  const stateCopy = { ...(state || null) };
+  const stateCopy = { ...(state || {}) };
 
   switch (action.type) {
     case ActionType.inputChange:
